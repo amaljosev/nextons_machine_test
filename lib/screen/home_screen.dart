@@ -9,33 +9,56 @@ class ScreenHome extends StatelessWidget {
   Widget build(BuildContext context) {
     final apiController = Get.put(ApiController());
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: apiController.isLoading.value
-                ? const SizedBox(
-                    child: Center(child: CircularProgressIndicator()))
-                : DataTable(
-                    columns: const [
-                      DataColumn(label: Text('Name')),
-                      DataColumn(label: Text('UID')),
-                      DataColumn(label: Text('Doc type')),
-                      DataColumn(label: Text('Image')),
-                    ],
-                    rows: apiController.data.map((item) {
-                      return DataRow(cells: [
-                        DataCell(Text(item['_name'])),
-                        DataCell(Text(item['_uid'])),
-                        DataCell(Text(item['_uid'])),
-                        DataCell(Text(item['_uid'])),
-                      ]);
-                    }).toList(),
-                  ),
-          ),
-        ),
-      ),
-    );
+        body: Obx(
+      () => apiController.isLoading.value
+          ? const SizedBox(child: Center(child: CircularProgressIndicator()))
+          : SafeArea(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  dataRowHeight: 100,
+                  columns: const [
+                    DataColumn(label: Text('Name')),
+                    DataColumn(label: Text('UID')),
+                    DataColumn(label: Text('Doc type')),
+                    DataColumn(label: Text('Image')),
+                  ],
+                  columnSpacing: 50,
+                  rows: apiController.data.map((item) {
+                    String type = '';
+                    if (item['_docType'] == 0) {
+                      type = 'Image';
+                    } else if (item['_docType'] == 1) {
+                      type = 'Video';
+                    } else if (item['_docType'] == 2) {
+                      type = 'Pdf';
+                    } else if (item['_docType'] == 3) {
+                      type = 'Audio';
+                    } else {
+                      type = 'Document';
+                    }
+                    String img = item['_url'];
+
+                    return DataRow(cells: [
+                      DataCell(Text(item['_name'] ?? '')),
+                      DataCell(Text(item['_uid'].toString())),
+                      DataCell(Text(type)),
+                      DataCell(Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 400,
+                          width: 50,
+                          child: Image.network(
+                            img,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )),
+                    ]);
+                  }).toList(),
+                ),
+              ),
+            ),
+    ));
   }
 }

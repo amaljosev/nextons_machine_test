@@ -1,12 +1,15 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ApiController extends GetxController {
   List<dynamic> data = [];
-  RxBool isLoading=false.obs;
+  final kHeight = const SizedBox(
+    height: 20,
+  );
+  RxBool isLoading = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -14,7 +17,7 @@ class ApiController extends GetxController {
   }
 
   Future<void> getDataFromAPI() async {
-    isLoading.value=true;
+    isLoading.value = true;
     final Map<String, dynamic> requestBody = {
       "statusArray": [1],
       "screenType": [],
@@ -40,17 +43,17 @@ class ApiController extends GetxController {
           },
         ),
       );
-      
-      if (response.statusCode == 201) {
-        final Map<String, dynamic> responseData = json.decode(response.data);
 
+      if (response.statusCode == 201) {
+        final Map<String, dynamic> responseData = response.data;
         data = responseData['data']['list'];
-         isLoading.value=false;
+        isLoading.value = false;
       } else {
         throw Exception('Failed to load data from API');
       }
     } catch (e) {
       log('Error: $e');
+
       throw Exception('Failed to connect to API');
     }
   }
