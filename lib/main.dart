@@ -14,11 +14,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Nexton Project',
       theme: ThemeData(
-        
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ScreenHome(), 
+      debugShowCheckedModeBanner: false,
+      home: const ScreenHome(),
     );
   }
 }
